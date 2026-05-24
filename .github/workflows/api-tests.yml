@@ -1,11 +1,7 @@
-name: Playwright API Tests
+name: API Automation
 
 on:
   push:
-    branches:
-      - main
-
-  pull_request:
     branches:
       - main
 
@@ -14,30 +10,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
       - name: Install Dependencies
-        run: npm install
-
-      - name: Install Playwright
-        run: npx playwright install
+        run: npm ci
 
       - name: Run API Tests
         run: npx playwright test
-        env:
-          BASE_URL: ${{ secrets.BASE_URL }}
-          CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-
-      - name: Upload Playwright Report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright-report
-          path: playwright-report/
