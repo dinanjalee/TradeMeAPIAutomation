@@ -1,0 +1,14 @@
+{
+  "name": "trademe-api-tests",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "playwright test",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.54.0",
+    "@types/node": "^25.9.1",
+    "dotenv": "^16.6.1",
+    "typescript": "^5.5.4"
+  }
+}
