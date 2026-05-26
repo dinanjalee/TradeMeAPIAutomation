@@ -60,24 +60,6 @@ test.describe('Watchlist API', () => {
     console.log('Number of items in filtered watchlist:', body.List.length);
   });
 
-  //**Verify user gets unauthorized error with invalid authentication when accessing watchlist - Authentication error handling**
-  test('unauthorized access', async ({ request }) => {
-    //Verify when accessing watchlist API with invalid authentication
-    const response = await request.get(`${process.env.BASE_URL}/mytrademe/watchlist/all.json`);
-    //Verify returns 401 Unauthorized status code
-    expect([400, 401, 403]).toContain(response.status());
-    console.log('Unauthorized access response status:', response.status());
-
-    const body = await response.json().catch(() => null);
-    //Verify body is not null and contains expected error properties
-    expect(body).not.toBeNull();
-    //Verify error response contains expected error message or code indicating listing not found
-    if (body) {
-      expect(body).toHaveProperty('ErrorDescription');
-    }
-    console.log('Response body:', await response.text());
-  });
-
   //**Verify user can remove listing from watchlist and verify it's removed successfully - Positive Scenario */
   test('remove listing from watchlist', async () => {
     const api = await createApiContext();
@@ -105,6 +87,24 @@ test.describe('Watchlist API', () => {
     );
     expect(listingExists).toBeFalsy();
     console.log('Removed listing found in watchlist:', listingExists);
+  });
+
+  //**Verify user gets unauthorized error with invalid authentication when accessing watchlist - Authentication error handling**
+  test('unauthorized access', async ({ request }) => {
+    //Verify when accessing watchlist API with invalid authentication
+    const response = await request.get(`${process.env.BASE_URL}/mytrademe/watchlist/all.json`);
+    //Verify returns 401 Unauthorized status code
+    expect([400, 401, 403]).toContain(response.status());
+    console.log('Unauthorized access response status:', response.status());
+
+    const body = await response.json().catch(() => null);
+    //Verify body is not null and contains expected error properties
+    expect(body).not.toBeNull();
+    //Verify error response contains expected error message or code indicating listing not found
+    if (body) {
+      expect(body).toHaveProperty('ErrorDescription');
+    }
+    console.log('Response body:', await response.text());
   });
 
 
