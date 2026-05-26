@@ -5,7 +5,7 @@
 import OAuth from 'oauth-1.0a';
 import crypto from 'crypto';
 
-export function getOAuthHeader(url: string, method: 'GET' | 'POST') {
+export function getOAuthHeader(url: string, method: 'GET' | 'POST' | 'DELETE') {
   const oauth = new OAuth({
     consumer: {
       key: process.env.CONSUMER_KEY!,

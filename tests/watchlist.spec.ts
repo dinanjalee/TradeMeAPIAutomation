@@ -8,12 +8,12 @@ test.describe('Watchlist API', () => {
   test('add listing to watchlist', async () => {
     const api = await createApiContext();
     //post the listingId to add to the watchlist and verify the API responds with 200 Success status code
-        const url = `${process.env.BASE_URL}${`/mytrademe/watchList/${testData.validListingId}.json`}`;
-        const response = await api.post(url, {
-          headers: {
-            Authorization: getOAuthHeader(url, 'POST'),
-          },
-        });
+    const url = `${process.env.BASE_URL}${`/mytrademe/watchList/${testData.validListingId}.json`}`;
+      const response = await api.post(url, {
+        headers: {
+          Authorization: getOAuthHeader(url, 'POST'),
+        },
+      });
     //Add a valid listing to the user's watchlist and verify it's successfully added
     expect(response.status()).toBe(200);
     console.log('Watchlist addition response status:', response.status());
@@ -24,11 +24,11 @@ test.describe('Watchlist API', () => {
   test('check watchlist to get added listing', async() =>{
     const api = await createApiContext();
     const url = `${process.env.BASE_URL}${`/mytrademe/watchlist/all.json`}`;
-        const watchlistResponse = await api.get(url, {
-          headers: {
-            Authorization: getOAuthHeader(url, 'GET'),
-          },
-        });
+      const watchlistResponse = await api.get(url, {
+        headers: {
+          Authorization: getOAuthHeader(url, 'GET'),
+        },
+      });
     expect(watchlistResponse.status()).toBe(200);
     console.log('Watchlist retrieval response status:', watchlistResponse.status());
 
@@ -47,11 +47,11 @@ test.describe('Watchlist API', () => {
     const api = await createApiContext();
     //Retrieve watchlist with filter applied (limit rows to 5)
     const url = `${process.env.BASE_URL}${`/mytrademe/watchlist/all.json?rows=5`}`;
-        const response = await api.get(url, {
-          headers: {
-            Authorization: getOAuthHeader(url, 'GET'),
-          },
-        });
+      const response = await api.get(url, {
+        headers: {
+          Authorization: getOAuthHeader(url, 'GET'),
+        },
+      });
     //Verify API responds 200 successfully respond code and returns a watchlist with only 5 items or less
     expect(response.status()).toBe(200);
     const body = await response.json();
@@ -77,5 +77,35 @@ test.describe('Watchlist API', () => {
     }
     console.log('Response body:', await response.text());
   });
+
+  //**Verify user can remove listing from watchlist and verify it's removed successfully - Positive Scenario */
+  test('remove listing from watchlist', async () => {
+    const api = await createApiContext();
+    //Remove listing from watchlist and verify API responds with 200 Success status code
+    const url = `${process.env.BASE_URL}${`/mytrademe/watchList/${testData.validListingId}.json`}`;
+      const response = await api.delete(url, {
+        headers: {
+          Authorization: getOAuthHeader(url, 'DELETE'),
+        },
+      });
+    expect(response.status()).toBe(200);
+    console.log('Watchlist removal response status:', response.status());
+
+    //Verify the removed listing is not exist in the all watchlist data
+    const urlWatchList = `${process.env.BASE_URL}${`/mytrademe/watchlist/all.json`}`;
+      const watchlistResponse = await api.get(urlWatchList, {
+        headers: {
+          Authorization: getOAuthHeader(urlWatchList, 'GET'),
+        },
+      });
+    expect(watchlistResponse.status()).toBe(200);
+    const body = await watchlistResponse.json();
+    const listingExists = body.List.some(
+      (item: any) => item.ListingId === Number(testData.validListingId)
+    );
+    expect(listingExists).toBeFalsy();
+    console.log('Removed listing found in watchlist:', listingExists);
+  });
+
 
 });
