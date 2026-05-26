@@ -1,19 +1,34 @@
 import { test, expect } from '@playwright/test';
 import createApiContext from '../utils/apiClient';
 import { testData } from '../utils/testData';
+import { getOAuthHeader } from '../utils/auth';
 
 test.describe('Watchlist API', () => {
   //**Verify user can add listing to watchlist and retrieve it successfully - Positive Scenario**
   test('add listing to watchlist', async () => {
     const api = await createApiContext();
+    //post the listingId to add to the watchlist and verify the API responds with 200 Success status code
+        const url = `${process.env.BASE_URL}${`/mytrademe/watchList/${testData.validListingId}.json`}`;
+        const response = await api.post(url, {
+          headers: {
+            Authorization: getOAuthHeader(url, 'POST'),
+          },
+        });
     //Add a valid listing to the user's watchlist and verify it's successfully added
-    const addResponse = await api.post(`/mytrademe/watchlist/${testData.validListingId}.json`);
-    expect(addResponse.ok()).toBeTruthy();
-    expect(addResponse.status()).toBe(200);
-    console.log('Watchlist addition response status:', addResponse.status());
+    expect(response.status()).toBe(200);
+    console.log('Watchlist addition response status:', response.status());
+    console.log('Watchlist addition response body:', await response.text());
+  });
 
-    //Verify retrieve the full watchlist after adding the listing and verify the 200 Succcess status code
-    const watchlistResponse = await api.get('/mytrademe/watchlist/all.json');
+  //**Verify retrieve the full watchlist after adding the listing and verify the added listing is present in the watchlist - Positive Scenario**
+  test('check watchlist to get added listing', async() =>{
+    const api = await createApiContext();
+    const url = `${process.env.BASE_URL}${`/mytrademe/watchlist/all.json`}`;
+        const watchlistResponse = await api.get(url, {
+          headers: {
+            Authorization: getOAuthHeader(url, 'GET'),
+          },
+        });
     expect(watchlistResponse.status()).toBe(200);
     console.log('Watchlist retrieval response status:', watchlistResponse.status());
 
@@ -24,14 +39,19 @@ test.describe('Watchlist API', () => {
     );
     expect(found).toBeTruthy();
     console.log('Added listing found in watchlist:', found);
-  });
+  })
+    
 
   //**Verify edge case validation for watchlist retrieval with filters - Edge Case Scenario**
   test('filter watchlist', async () => {
     const api = await createApiContext();
-
     //Retrieve watchlist with filter applied (limit rows to 5)
-    const response = await api.get('/mytrademe/watchlist/all.json?rows=5');
+    const url = `${process.env.BASE_URL}${`/mytrademe/watchlist/all.json?rows=5`}`;
+        const response = await api.get(url, {
+          headers: {
+            Authorization: getOAuthHeader(url, 'GET'),
+          },
+        });
     //Verify API responds 200 successfully respond code and returns a watchlist with only 5 items or less
     expect(response.status()).toBe(200);
     const body = await response.json();

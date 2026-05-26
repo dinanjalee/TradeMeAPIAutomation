@@ -1,4 +1,4 @@
-# Trade Me API Automation Challenge
+# TradeMe API Automation Challenge
 
 ## Tech Stack
 - Playwright
