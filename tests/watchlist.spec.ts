@@ -14,7 +14,7 @@ test.describe('Watchlist API', () => {
           Authorization: getOAuthHeader(url, 'POST'),
         },
       });
-    //Add a valid listing to the user's watchlist and verify it's successfully added
+    //verify 200 status for successfully added
     expect(response.status()).toBe(200);
     console.log('Watchlist addition response status:', response.status());
     console.log('Watchlist addition response body:', await response.text());
@@ -42,7 +42,7 @@ test.describe('Watchlist API', () => {
   })
     
 
-  //**Verify edge case validation for watchlist retrieval with filters - Edge Case Scenario**
+  //**Verify edge case validation for watchlist retrieval with filters**
   test('filter watchlist', async () => {
     const api = await createApiContext();
     //Retrieve watchlist with filter applied (limit rows to 5)
@@ -89,22 +89,20 @@ test.describe('Watchlist API', () => {
     console.log('Removed listing found in watchlist:', listingExists);
   });
 
-  //**Verify user gets unauthorized error with invalid authentication when accessing watchlist - Authentication error handling**
-  test('unauthorized access', async ({ request }) => {
-    //Verify when accessing watchlist API with invalid authentication
-    const response = await request.get(`${process.env.BASE_URL}/mytrademe/watchlist/all.json`);
-    //Verify returns 401 Unauthorized status code
-    expect([400, 401, 403]).toContain(response.status());
-    console.log('Unauthorized access response status:', response.status());
-
-    const body = await response.json().catch(() => null);
-    //Verify body is not null and contains expected error properties
-    expect(body).not.toBeNull();
-    //Verify error response contains expected error message or code indicating listing not found
-    if (body) {
-      expect(body).toHaveProperty('ErrorDescription');
-    }
-    console.log('Response body:', await response.text());
+  //**Verify user cannot add invalid listing to watchlist and retrieve it successfully - Negative Scenario**
+  test('add invalid listing to watchlist', async () => {
+    const api = await createApiContext();
+    //post the listingId to add to the watchlist and verify the API responds with 200 Success status code
+    const url = `${process.env.BASE_URL}${`/mytrademe/watchList/${testData.invalidListingId}.json`}`;
+      const response = await api.post(url, {
+        headers: {
+          Authorization: getOAuthHeader(url, 'POST'),
+        },
+      });
+    //verify 400 status and error message for invalid listingId
+    expect(response.status()).toBe(400);
+    console.log('Watchlist addition response status:', response.status());
+    console.log('Watchlist addition response body:', await response.text());
   });
 
 

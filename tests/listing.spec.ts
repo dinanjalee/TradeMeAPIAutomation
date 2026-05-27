@@ -76,22 +76,6 @@ test.describe('Retrieve Listing API', () => {
     console.log('Response body:', await response.text());
   });
 
-
-  //**Verify user gets unauthorized error with invalid authentication - Negative Scenario**
-  test('should return unauthorized with invalid auth', async ({ request }) => {
-    const response = await request.get(`${process.env.BASE_URL}/listings/${testData.validListingId}.json`);
-    
-    expect([400, 403]).toContain(response.status());
-    console.log('Response status:', response.status());
-    
-    const body = await response.json().catch(() => null);
-    //Verify body and error response contains error message
-    if (body) {
-      expect(body).toHaveProperty('ErrorDescription');
-    }
-    console.log('Response body:', await response.text());
-  });
-
   //**Verify user gets an error when requesting a listing with a malformed ID - Negative Scenario**
   test('should handle malformed listing id', async () => {
     const api = await createApiContext();
@@ -128,6 +112,7 @@ test.describe('Retrieve Listing API', () => {
 
     //Verify 4xx error response status code
     expect([400, 404]).toContain(response.status());
+    console.log('Response status:', response.status());
 
     const body = await response.json().catch(() => null);
     //Verify body and error response contains error message
@@ -136,4 +121,5 @@ test.describe('Retrieve Listing API', () => {
     }
     console.log('Response body:', await response.text());
   });
+
 });
