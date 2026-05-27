@@ -1,7 +1,3 @@
-/*export function getOAuthHeader(): string {
-  return `OAuth oauth_consumer_key="${process.env.CONSUMER_KEY}",oauth_token="${process.env.ACCESS_TOKEN}",oauth_signature_method="PLAINTEXT",oauth_signature="${process.env.CONSUMER_SECRET}&${process.env.TOKEN_SECRET}"`;  
-}*/
-
 import OAuth from 'oauth-1.0a';
 import crypto from 'crypto';
 
