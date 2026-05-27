@@ -4,7 +4,7 @@ import { testData } from '../utils/testData';
 import { getOAuthHeader } from '../utils/auth';
 
 test.describe('Watchlist API', () => {
-  //**Verify user can add listing to watchlist and retrieve it successfully - Positive Scenario**
+  //**Verify user can add listing to watchlist successfully - Positive Scenario**
   test('add listing to watchlist', async () => {
     const api = await createApiContext();
     //post the listingId to add to the watchlist and verify the API responds with 200 Success status code
@@ -42,7 +42,7 @@ test.describe('Watchlist API', () => {
   })
     
 
-  //**Verify edge case validation for watchlist retrieval with filters**
+  //**Verify  watchlist retrieval with filters - Positive Scenario**
   test('filter watchlist', async () => {
     const api = await createApiContext();
     //Retrieve watchlist with filter applied (limit rows to 5)
@@ -60,7 +60,7 @@ test.describe('Watchlist API', () => {
     console.log('Number of items in filtered watchlist:', body.List.length);
   });
 
-  //**Verify user can remove listing from watchlist and verify it's removed successfully - Positive Scenario */
+  //**Verify user can remove listing from watchlist and verify it's removed successfully - Positive Scenario *
   test('remove listing from watchlist', async () => {
     const api = await createApiContext();
     //Remove listing from watchlist and verify API responds with 200 Success status code

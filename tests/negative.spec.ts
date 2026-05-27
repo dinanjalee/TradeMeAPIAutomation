@@ -56,7 +56,7 @@ test.describe('Negative API Scenarios', () => {
   test('missing authentication header', async ({ request }) => {
     const response = await request.get(`${process.env.BASE_URL}/listings/${testData.validListingId}.json`);
 
-    expect([400, 401, 403]).toContain(response.status());
+    expect([400, 401]).toContain(response.status());
     console.log('Response status:', response.status());
 
     const body = await response.json().catch(() => null);

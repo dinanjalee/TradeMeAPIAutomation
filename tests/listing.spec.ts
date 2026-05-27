@@ -63,7 +63,7 @@ test.describe('Retrieve Listing API', () => {
       },
     });
     ///Verify 4xx error response status code
-    expect([400, 404, 500]).toContain(response.status());
+    expect([400, 404]).toContain(response.status());
     console.log('Response status:', response.status());
 
     const body = await response.json().catch(() => null);
